@@ -20,3 +20,4 @@ export 'src/models/dashboard_stats.dart';
 
 // DTOs
 export 'src/dtos/auth_dtos.dart';
+export 'src/dtos/paginated_response.dart';

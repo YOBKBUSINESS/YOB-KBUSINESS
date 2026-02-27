@@ -1,5 +1,10 @@
 import 'package:dart_frog/dart_frog.dart';
 import 'package:yob_api/src/db/database.dart';
+import 'package:yob_api/src/repositories/borehole_repository.dart';
+import 'package:yob_api/src/repositories/kit_repository.dart';
+import 'package:yob_api/src/repositories/parcel_repository.dart';
+import 'package:yob_api/src/repositories/producer_repository.dart';
+import 'package:yob_api/src/repositories/training_repository.dart';
 import 'package:yob_api/src/services/auth_service.dart';
 import 'package:yob_api/src/services/jwt_service.dart';
 
@@ -44,6 +49,13 @@ Middleware _servicesProvider() {
   final jwtService = JwtService();
   final authService = AuthService(db: db, jwtService: jwtService);
 
+  // Repositories
+  final producerRepo = ProducerRepository(db: db);
+  final parcelRepo = ParcelRepository(db: db);
+  final boreholeRepo = BoreholeRepository(db: db);
+  final kitRepo = KitRepository(db: db);
+  final trainingRepo = TrainingRepository(db: db);
+
   // Initialize DB on first request
   var dbInitialized = false;
 
@@ -57,7 +69,12 @@ Middleware _servicesProvider() {
       final updatedContext = context
           .provide<Database>(() => db)
           .provide<JwtService>(() => jwtService)
-          .provide<AuthService>(() => authService);
+          .provide<AuthService>(() => authService)
+          .provide<ProducerRepository>(() => producerRepo)
+          .provide<ParcelRepository>(() => parcelRepo)
+          .provide<BoreholeRepository>(() => boreholeRepo)
+          .provide<KitRepository>(() => kitRepo)
+          .provide<TrainingRepository>(() => trainingRepo);
 
       return handler(updatedContext);
     };

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../auth/data/auth_provider.dart';
 
 class DashboardShell extends ConsumerStatefulWidget {
@@ -12,8 +13,6 @@ class DashboardShell extends ConsumerStatefulWidget {
 }
 
 class _DashboardShellState extends ConsumerState<DashboardShell> {
-  int _selectedIndex = 0;
-
   static const _navItems = [
     _NavItem(icon: Icons.dashboard_rounded, label: 'Tableau de bord'),
     _NavItem(icon: Icons.people_rounded, label: 'Producteurs'),
@@ -25,11 +24,18 @@ class _DashboardShellState extends ConsumerState<DashboardShell> {
     _NavItem(icon: Icons.handshake_rounded, label: 'Investisseurs'),
   ];
 
-  // Route paths corresponding to each nav item
-  // static const _routes = [
-  //   '/dashboard', '/producers', '/parcels', '/boreholes',
-  //   '/kits', '/trainings', '/finances', '/investors',
-  // ];
+  static const _routes = [
+    '/dashboard', '/producers', '/parcels', '/boreholes',
+    '/kits', '/trainings', '/finances', '/investors',
+  ];
+
+  int _selectedIndexFromLocation(BuildContext context) {
+    final location = GoRouterState.of(context).matchedLocation;
+    for (int i = _routes.length - 1; i >= 0; i--) {
+      if (location.startsWith(_routes[i])) return i;
+    }
+    return 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,39 +43,37 @@ class _DashboardShellState extends ConsumerState<DashboardShell> {
     final isDesktop = screenWidth >= 1024;
     final isTablet = screenWidth >= 600 && screenWidth < 1024;
     final user = ref.watch(authProvider).user;
+    final selectedIndex = _selectedIndexFromLocation(context);
 
     if (isDesktop) {
-      return _buildDesktopLayout(user);
+      return _buildDesktopLayout(user, selectedIndex);
     } else if (isTablet) {
-      return _buildTabletLayout(user);
+      return _buildTabletLayout(user, selectedIndex);
     } else {
-      return _buildMobileLayout(user);
+      return _buildMobileLayout(user, selectedIndex);
     }
   }
 
-  Widget _buildDesktopLayout(Map<String, dynamic>? user) {
+  Widget _buildDesktopLayout(Map<String, dynamic>? user, int selectedIndex) {
     return Scaffold(
       body: Row(
         children: [
-          // Sidebar
           SizedBox(
             width: 260,
-            child: _buildSidebar(user, expanded: true),
+            child: _buildSidebar(user, selectedIndex, expanded: true),
           ),
-          // Content
           Expanded(child: widget.child),
         ],
       ),
     );
   }
 
-  Widget _buildTabletLayout(Map<String, dynamic>? user) {
+  Widget _buildTabletLayout(Map<String, dynamic>? user, int selectedIndex) {
     return Scaffold(
       body: Row(
         children: [
-          // Rail
           NavigationRail(
-            selectedIndex: _selectedIndex,
+            selectedIndex: selectedIndex,
             onDestinationSelected: _onItemTapped,
             labelType: NavigationRailLabelType.all,
             leading: Padding(
@@ -96,11 +100,10 @@ class _DashboardShellState extends ConsumerState<DashboardShell> {
     );
   }
 
-  Widget _buildMobileLayout(Map<String, dynamic>? user) {
-    // Show only first 5 items on mobile bottom nav
+  Widget _buildMobileLayout(Map<String, dynamic>? user, int selectedIndex) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_navItems[_selectedIndex].label),
+        title: Text(_navItems[selectedIndex].label),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -110,7 +113,7 @@ class _DashboardShellState extends ConsumerState<DashboardShell> {
       ),
       body: widget.child,
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex.clamp(0, 4),
+        currentIndex: selectedIndex.clamp(0, 4),
         onTap: _onItemTapped,
         items: _navItems
             .take(5)
@@ -125,7 +128,7 @@ class _DashboardShellState extends ConsumerState<DashboardShell> {
     );
   }
 
-  Widget _buildSidebar(Map<String, dynamic>? user, {bool expanded = true}) {
+  Widget _buildSidebar(Map<String, dynamic>? user, int selectedIndex, {bool expanded = true}) {
     return Container(
       color: const Color(0xFF1B5E20),
       child: Column(
@@ -182,7 +185,7 @@ class _DashboardShellState extends ConsumerState<DashboardShell> {
               itemCount: _navItems.length,
               itemBuilder: (context, index) {
                 final item = _navItems[index];
-                final isSelected = index == _selectedIndex;
+                final isSelected = index == selectedIndex;
 
                 return ListTile(
                   leading: Icon(
@@ -233,8 +236,9 @@ class _DashboardShellState extends ConsumerState<DashboardShell> {
   }
 
   void _onItemTapped(int index) {
-    setState(() => _selectedIndex = index);
-    // In the future, use go_router to navigate to _routes[index]
+    if (index >= 0 && index < _routes.length) {
+      context.go(_routes[index]);
+    }
   }
 }
 
