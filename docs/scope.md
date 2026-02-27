@@ -174,11 +174,11 @@ The client wants this to serve as:
 - [x] Responsive layout (mobile + web breakpoints)
 
 ### Phase 2: Core Modules
-- [ ] **Producers module** — CRUD, photo upload, ID scan, status management
-- [ ] **Parcels module** — CRUD, GPS integration, map view, document upload
-- [ ] **Boreholes module** — CRUD, progress tracking, photo gallery, maintenance log
-- [ ] **Agricultural Kits module** — CRUD, distribution tracking, repayment status
-- [ ] **Training module** — CRUD, attendance, evaluations, certifications, calendar
+- [x] **Producers module** — CRUD, status management, search & filters, list/detail/form screens
+- [x] **Parcels module** — CRUD, tenure status, crop type filters, responsive grid layout
+- [x] **Boreholes module** — CRUD, progress tracking, cost display (FCFA), status filters
+- [x] **Agricultural Kits module** — CRUD, distribution tracking, repayment status, beneficiary link
+- [x] **Training module** — CRUD, attendance, certification filter, evaluation notes
 
 ### Phase 3: Financial Engine
 - [ ] **Finance module** — Income/expense tracking
