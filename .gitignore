@@ -1,2 +1,42 @@
-# add scope.md
-./docs/scope.md
+# Flutter/Dart
+**/build/
+**/.dart_tool/
+**/.packages
+**/.pub/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/pubspec.lock
+
+# FVM
+
+# IDE
+.idea/
+*.iml
+.vscode/settings.json
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Docker
+docker-compose.override.yml
+
+# Generated
+**/*.g.dart
+**/*.freezed.dart
+**/*.mocks.dart
+
+# Coverage
+coverage/
+**/coverage/
+
+# dart_frog
+**/.dart_frog/
+
+# FVM Version Cache
+.fvm/

@@ -165,13 +165,13 @@ The client wants this to serve as:
 ## TODO — Development Roadmap
 
 ### Phase 1: Foundation
-- [ ] Project setup — Flutter monorepo (web + mobile)
-- [ ] Choose & configure backend (Firebase / Supabase / custom API)
-- [ ] Database schema design (all modules)
-- [ ] Authentication system (login, registration, password reset)
-- [ ] Role-based access control (RBAC) implementation
-- [ ] Base UI/UX — app shell, navigation, theming
-- [ ] Responsive layout (mobile + web breakpoints)
+- [x] Project setup — Flutter monorepo (web + mobile) with FVM + Melos
+- [x] Choose & configure backend — dart_frog + PostgreSQL (Docker)
+- [x] Database schema design (all modules)
+- [x] Authentication system (login, registration, password reset)
+- [x] Role-based access control (RBAC) implementation
+- [x] Base UI/UX — app shell, navigation, theming
+- [x] Responsive layout (mobile + web breakpoints)
 
 ### Phase 2: Core Modules
 - [ ] **Producers module** — CRUD, photo upload, ID scan, status management
