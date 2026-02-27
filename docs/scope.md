@@ -191,15 +191,15 @@ The client wants this to serve as:
 ### Phase 4: Investors & Reporting
 - [x] **Investors module** — Registry, investment tracking, project linking
 - [x] Expected return calculations
-- [ ] Automated email report delivery to investors
-- [ ] Partner portal (read-only access)
+- [x] Automated email report delivery to investors (EmailReportService + API routes)
+- [x] Partner portal (read-only investor API with JWT auth)
 
 ### Phase 5: Strategic Dashboard
-- [ ] **DG Dashboard** — KPI widgets (producers, hectares, production, cash)
-- [ ] Active projects overview
-- [ ] Urgent alerts panel
-- [ ] Charts & data visualization
-- [ ] Quick action shortcuts
+- [x] **DG Dashboard** — KPI widgets (producers, hectares, production, cash, projects, investors)
+- [x] Active projects overview with progress bars
+- [x] Urgent alerts panel (critical/warning/info severity)
+- [x] Charts & data visualization (module summary, recent activity feed)
+- [x] Quick action shortcuts (5 shortcuts to key operations)
 
 ### Phase 6: Polish & Production
 - [ ] Offline mode & data synchronization (mobile)
