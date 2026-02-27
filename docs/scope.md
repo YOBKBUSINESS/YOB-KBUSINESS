@@ -189,8 +189,8 @@ The client wants this to serve as:
 - [x] Financial dashboard (1-click health overview) with charts & summaries
 
 ### Phase 4: Investors & Reporting
-- [ ] **Investors module** — Registry, investment tracking, project linking
-- [ ] Expected return calculations
+- [x] **Investors module** — Registry, investment tracking, project linking
+- [x] Expected return calculations
 - [ ] Automated email report delivery to investors
 - [ ] Partner portal (read-only access)
 

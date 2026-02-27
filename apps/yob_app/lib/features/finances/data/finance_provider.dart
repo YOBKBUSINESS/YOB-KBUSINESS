@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yob_core/yob_core.dart';
 import '../../../core/services/api_service.dart';
 import '../../../core/utils/providers.dart';
-import 'package:dio/dio.dart';
 
 /// Base API service for transaction CRUD (sub-path under /finances/transactions).
 final transactionApiProvider = Provider<ApiService>((ref) {

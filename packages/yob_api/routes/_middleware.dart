@@ -5,6 +5,7 @@ import 'package:yob_api/src/repositories/kit_repository.dart';
 import 'package:yob_api/src/repositories/parcel_repository.dart';
 import 'package:yob_api/src/repositories/producer_repository.dart';
 import 'package:yob_api/src/repositories/training_repository.dart';
+import 'package:yob_api/src/repositories/investor_repository.dart';
 import 'package:yob_api/src/repositories/transaction_repository.dart';
 import 'package:yob_api/src/services/auth_service.dart';
 import 'package:yob_api/src/services/jwt_service.dart';
@@ -57,6 +58,7 @@ Middleware _servicesProvider() {
   final kitRepo = KitRepository(db: db);
   final trainingRepo = TrainingRepository(db: db);
   final transactionRepo = TransactionRepository(db: db);
+  final investorRepo = InvestorRepository(db: db);
 
   // Initialize DB on first request
   var dbInitialized = false;
@@ -77,7 +79,8 @@ Middleware _servicesProvider() {
           .provide<BoreholeRepository>(() => boreholeRepo)
           .provide<KitRepository>(() => kitRepo)
           .provide<TrainingRepository>(() => trainingRepo)
-          .provide<TransactionRepository>(() => transactionRepo);
+          .provide<TransactionRepository>(() => transactionRepo)
+          .provide<InvestorRepository>(() => investorRepo);
 
       return handler(updatedContext);
     };

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../features/auth/data/auth_provider.dart';
@@ -8,6 +7,14 @@ import '../features/boreholes/presentation/borehole_form_screen.dart';
 import '../features/boreholes/presentation/borehole_list_screen.dart';
 import '../features/dashboard/presentation/dashboard_screen.dart';
 import '../features/dashboard/presentation/dashboard_shell.dart';
+import '../features/finances/presentation/finance_dashboard_screen.dart';
+import '../features/finances/presentation/monthly_report_screen.dart';
+import '../features/finances/presentation/transaction_detail_screen.dart';
+import '../features/finances/presentation/transaction_form_screen.dart';
+import '../features/finances/presentation/transaction_list_screen.dart';
+import '../features/investors/presentation/investor_detail_screen.dart';
+import '../features/investors/presentation/investor_form_screen.dart';
+import '../features/investors/presentation/investor_list_screen.dart';
 import '../features/kits/presentation/kit_detail_screen.dart';
 import '../features/kits/presentation/kit_form_screen.dart';
 import '../features/kits/presentation/kit_list_screen.dart';
@@ -182,57 +189,63 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
 
-          // ── Finances (placeholder) ──
+          // ── Finances ──
           GoRoute(
             path: '/finances',
-            builder: (context, state) => const _PlaceholderScreen(
-              title: 'Finances',
-              icon: Icons.account_balance_wallet_rounded,
-            ),
+            builder: (context, state) => const TransactionListScreen(),
+            routes: [
+              GoRoute(
+                path: 'dashboard',
+                builder: (context, state) => const FinanceDashboardScreen(),
+              ),
+              GoRoute(
+                path: 'report',
+                builder: (context, state) => const MonthlyReportScreen(),
+              ),
+              GoRoute(
+                path: 'transactions/new',
+                builder: (context, state) => const TransactionFormScreen(),
+              ),
+              GoRoute(
+                path: 'transactions/:id',
+                builder: (context, state) => TransactionDetailScreen(
+                    transactionId: state.pathParameters['id']!),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    builder: (context, state) => TransactionFormScreen(
+                        transactionId: state.pathParameters['id']),
+                  ),
+                ],
+              ),
+            ],
           ),
 
-          // ── Investors (placeholder) ──
+          // ── Investors ──
           GoRoute(
             path: '/investors',
-            builder: (context, state) => const _PlaceholderScreen(
-              title: 'Investisseurs',
-              icon: Icons.handshake_rounded,
-            ),
+            builder: (context, state) => const InvestorListScreen(),
+            routes: [
+              GoRoute(
+                path: 'new',
+                builder: (context, state) => const InvestorFormScreen(),
+              ),
+              GoRoute(
+                path: ':id',
+                builder: (context, state) => InvestorDetailScreen(
+                    investorId: state.pathParameters['id']!),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    builder: (context, state) => InvestorFormScreen(
+                        investorId: state.pathParameters['id']),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
     ],
   );
 });
-
-/// Placeholder screen for modules not yet implemented
-class _PlaceholderScreen extends StatelessWidget {
-  final String title;
-  final IconData icon;
-
-  const _PlaceholderScreen({required this.title, required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 64, color: Colors.grey[400]),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.grey[600],
-                ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Module en cours de développement',
-            style: TextStyle(color: Colors.grey[500]),
-          ),
-        ],
-      ),
-    );
-  }
-}
