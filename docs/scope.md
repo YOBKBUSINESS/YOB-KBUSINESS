@@ -181,12 +181,12 @@ The client wants this to serve as:
 - [x] **Training module** — CRUD, attendance, certification filter, evaluation notes
 
 ### Phase 3: Financial Engine
-- [x] **Finance module** — Income/expense tracking (TransactionRepository, CRUD API, list/detail/form screens)
-- [x] Real-time treasury balance calculation (treasury API endpoint + banner widget)
-- [x] Low funds alert system (configurable threshold, critical/warning/ok levels)
-- [x] Simplified accounting views (category breakdown, type filters, search)
-- [x] Monthly report auto-generation (report API endpoint + monthly report screen)
-- [x] Financial dashboard (1-click health overview with bar chart, category cards, treasury card)
+- [x] **Finance module** — Income/expense tracking, transaction CRUD with search & filters
+- [x] Real-time treasury balance calculation with alert system (critical/warning/ok)
+- [x] Low funds alert system with configurable threshold
+- [x] Simplified accounting views — transaction list with type/category filters
+- [x] Monthly report generation with category breakdowns & top transactions
+- [x] Financial dashboard (1-click health overview) with charts & summaries
 
 ### Phase 4: Investors & Reporting
 - [ ] **Investors module** — Registry, investment tracking, project linking
