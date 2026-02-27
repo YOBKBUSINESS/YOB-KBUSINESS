@@ -21,6 +21,11 @@ import '../features/splash/splash_screen.dart';
 import '../features/trainings/presentation/training_detail_screen.dart';
 import '../features/trainings/presentation/training_form_screen.dart';
 import '../features/trainings/presentation/training_list_screen.dart';
+import '../features/finances/presentation/transaction_list_screen.dart';
+import '../features/finances/presentation/transaction_detail_screen.dart';
+import '../features/finances/presentation/transaction_form_screen.dart';
+import '../features/finances/presentation/finance_dashboard_screen.dart';
+import '../features/finances/presentation/monthly_report_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
@@ -182,13 +187,42 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
 
-          // ── Finances (placeholder) ──
+          // ── Finances ──
           GoRoute(
             path: '/finances',
-            builder: (context, state) => const _PlaceholderScreen(
-              title: 'Finances',
-              icon: Icons.account_balance_wallet_rounded,
-            ),
+            builder: (context, state) => const TransactionListScreen(),
+            routes: [
+              GoRoute(
+                path: 'dashboard',
+                builder: (context, state) =>
+                    const FinanceDashboardScreen(),
+              ),
+              GoRoute(
+                path: 'report',
+                builder: (context, state) =>
+                    const MonthlyReportScreen(),
+              ),
+              GoRoute(
+                path: 'transactions/new',
+                builder: (context, state) =>
+                    const TransactionFormScreen(),
+              ),
+              GoRoute(
+                path: 'transactions/:id',
+                builder: (context, state) =>
+                    TransactionDetailScreen(
+                        transactionId: state.pathParameters['id']!),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    builder: (context, state) =>
+                        TransactionFormScreen(
+                            transactionId:
+                                state.pathParameters['id']),
+                  ),
+                ],
+              ),
+            ],
           ),
 
           // ── Investors (placeholder) ──
