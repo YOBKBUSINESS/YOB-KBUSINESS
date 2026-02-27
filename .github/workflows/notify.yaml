@@ -1,0 +1,24 @@
+name: notify
+
+on:
+  push:
+    branch:
+      - dev
+
+defaults:
+  run:
+    working-directory: .
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - uses: Ofceab-Studio/telegram-action@1.0.1
+        name: notify
+        with:
+          to: ${{ secrets.CHAT_ID }}
+          token: ${{ secrets.BOT_ID }}
+          message: "YOB-B\n${{ github.event.head_commit.message }}"
