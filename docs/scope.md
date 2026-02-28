@@ -213,6 +213,89 @@ The client wants this to serve as:
 
 ---
 
+## Run Locally (Testing)
+
+### Prerequisites
+
+- **FVM** installed → https://fvm.app/
+- **Docker** & **Docker Compose** installed
+- **Melos** → `dart pub global activate melos`
+
+### Step 1 — Install dependencies
+
+```bash
+cd YOB-KBUSINESS
+fvm use 3.27.0
+melos bootstrap
+```
+
+### Step 2 — Start PostgreSQL
+
+```bash
+docker compose up -d
+```
+
+Wait for the health check to pass:
+```bash
+docker compose ps   # postgres should show "healthy"
+```
+
+### Step 3 — Start the API server
+
+```bash
+cd packages/yob_api
+fvm dart_frog dev
+```
+
+API runs at `http://localhost:8080`. Verify:
+```bash
+curl http://localhost:8080/
+# → {"name":"YOB K Business API","version":"0.1.0","status":"running"}
+```
+
+### Step 4 — Run the Flutter app
+
+```bash
+cd apps/yob_app
+
+# Web (Chrome)
+fvm flutter run -d chrome
+
+# Or macOS desktop
+fvm flutter run -d macos
+
+# Or mobile device/emulator
+fvm flutter run
+```
+
+### Step 5 — Login
+
+| Field | Value |
+|-------|-------|
+| Email | `admin@yobkbusiness.com` |
+| Password | `admin123` |
+
+### Step 6 — Run all tests
+
+```bash
+# From project root
+cd packages/yob_core && fvm dart test
+cd ../yob_api && fvm dart test
+cd ../../apps/yob_app && fvm flutter test
+```
+
+Expected: **52 tests, all passing**.
+
+### Step 7 — Stop
+
+```bash
+# Stop the API server: Ctrl+C in the terminal
+# Stop PostgreSQL:
+docker compose down
+```
+
+---
+
 ## Summary
 
 | Item | Count |
