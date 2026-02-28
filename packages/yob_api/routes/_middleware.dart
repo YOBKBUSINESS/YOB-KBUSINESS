@@ -1,5 +1,8 @@
 import 'package:dart_frog/dart_frog.dart';
 import 'package:yob_api/src/db/database.dart';
+import 'package:yob_api/src/middleware/input_validator.dart';
+import 'package:yob_api/src/middleware/rate_limiter.dart';
+import 'package:yob_api/src/middleware/security_headers.dart';
 import 'package:yob_api/src/repositories/borehole_repository.dart';
 import 'package:yob_api/src/repositories/dashboard_repository.dart';
 import 'package:yob_api/src/repositories/kit_repository.dart';
@@ -16,6 +19,10 @@ import 'package:yob_api/src/services/jwt_service.dart';
 Handler middleware(Handler handler) {
   return handler
       .use(requestLogger())
+      .use(securityHeadersMiddleware())
+      .use(rateLimitMiddleware())
+      .use(inputSanitizationMiddleware())
+      .use(requestSizeLimiter())
       .use(_corsMiddleware())
       .use(_servicesProvider());
 }

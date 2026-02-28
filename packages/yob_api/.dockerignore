@@ -1,0 +1,10 @@
+# YOB K Business API — Docker ignore
+.dart_tool/
+.packages
+build/
+.git/
+.github/
+test/
+*.md
+.env.local
+.dartignore

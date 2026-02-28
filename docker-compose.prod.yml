@@ -1,0 +1,95 @@
+# ──────────────────────────────────────────────────────────────
+# YOB K Business — Production Docker Compose
+# ──────────────────────────────────────────────────────────────
+# Usage:
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# Required .env file with:
+#   DB_PASSWORD=<strong_password>
+#   JWT_SECRET=<random_secret_64chars>
+#   API_PORT=8080
+# ──────────────────────────────────────────────────────────────
+
+version: '3.8'
+
+services:
+  # ── PostgreSQL Database ────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: yob_postgres_prod
+    restart: always
+    environment:
+      POSTGRES_DB: yob_kbusiness
+      POSTGRES_USER: yob_admin
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+    volumes:
+      - yob_pgdata_prod:/var/lib/postgresql/data
+      - ./packages/yob_api/db/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yob_admin -d yob_kbusiness"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - yob_network
+    # No port exposure — only accessible from the API service
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # ── Dart Frog API Server ───────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: packages/yob_api/Dockerfile
+    container_name: yob_api_prod
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: yob_kbusiness
+      DB_USER: yob_admin
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      DB_MAX_CONNECTIONS: 10
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      PORT: 8080
+    ports:
+      - "${API_PORT:-8080}:8080"
+    networks:
+      - yob_network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+
+  # ── Nginx Reverse Proxy (optional) ────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: yob_nginx
+    restart: always
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    networks:
+      - yob_network
+    profiles:
+      - with-nginx
+
+volumes:
+  yob_pgdata_prod:
+    driver: local
+
+networks:
+  yob_network:
+    driver: bridge

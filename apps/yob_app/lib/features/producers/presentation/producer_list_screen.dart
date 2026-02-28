@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:yob_core/yob_core.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/services/csv_export_service.dart';
+import '../../../core/services/export_helper.dart';
+import '../../../core/services/pdf_export_service.dart';
 import '../data/producer_provider.dart';
 
 class ProducerListScreen extends ConsumerStatefulWidget {
@@ -19,6 +22,45 @@ class _ProducerListScreenState extends ConsumerState<ProducerListScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _exportProducers(
+    BuildContext context,
+    ProducerListState state,
+  ) {
+    final prodMaps = state.producers
+        .map((p) => p.toJson())
+        .toList();
+
+    ExportHelper.showExportDialog(
+      context: context,
+      title: 'Producteurs',
+      fileBaseName: 'producteurs_yob',
+      onPdf: () {
+        final headers = [
+          'Nom', 'Téléphone', 'Localité', 'Statut', 'Surface (ha)',
+        ];
+        final rows = prodMaps.map((p) {
+          return [
+            p['full_name']?.toString() ?? '',
+            p['phone']?.toString() ?? '',
+            p['locality']?.toString() ?? '',
+            p['status']?.toString() ?? '',
+            '${p['cultivated_area'] ?? 0}',
+          ];
+        }).toList();
+        return PdfExportService.generateTablePdf(
+          title: 'Liste des Producteurs',
+          subtitle: '${state.total} producteur(s)',
+          headers: headers,
+          rows: rows,
+        );
+      },
+      onCsv: () async {
+        final csv = CsvExportService.exportProducers(prodMaps);
+        return CsvExportService.csvToBytes(csv);
+      },
+    );
   }
 
   @override
@@ -54,10 +96,21 @@ class _ProducerListScreenState extends ConsumerState<ProducerListScreen> {
                         ),
                       ],
                     ),
-                    FilledButton.icon(
-                      onPressed: () => context.go('/producers/new'),
-                      icon: const Icon(Icons.add),
-                      label: const Text('Nouveau'),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () => _exportProducers(context, state),
+                          icon: const Icon(Icons.file_download_outlined),
+                          tooltip: 'Exporter',
+                        ),
+                        const SizedBox(width: 4),
+                        FilledButton.icon(
+                          onPressed: () => context.go('/producers/new'),
+                          icon: const Icon(Icons.add),
+                          label: const Text('Nouveau'),
+                        ),
+                      ],
                     ),
                   ],
                 ),

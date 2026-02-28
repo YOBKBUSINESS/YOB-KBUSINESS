@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/widgets/notification_bell.dart';
+import '../../../core/widgets/offline_banner.dart';
 import '../../auth/data/auth_provider.dart';
 
 class DashboardShell extends ConsumerStatefulWidget {
@@ -62,7 +64,14 @@ class _DashboardShellState extends ConsumerState<DashboardShell> {
             width: 260,
             child: _buildSidebar(user, selectedIndex, expanded: true),
           ),
-          Expanded(child: widget.child),
+          Expanded(
+            child: Column(
+              children: [
+                const OfflineBanner(),
+                Expanded(child: widget.child),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -105,6 +114,8 @@ class _DashboardShellState extends ConsumerState<DashboardShell> {
       appBar: AppBar(
         title: Text(_navItems[selectedIndex].label),
         actions: [
+          const OfflineIndicator(),
+          const NotificationBell(),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => ref.read(authProvider.notifier).logout(),

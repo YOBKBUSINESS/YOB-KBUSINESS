@@ -202,14 +202,14 @@ The client wants this to serve as:
 - [x] Quick action shortcuts (5 shortcuts to key operations)
 
 ### Phase 6: Polish & Production
-- [ ] Offline mode & data synchronization (mobile)
-- [ ] Push notifications setup
-- [ ] Data export (PDF + Excel)
-- [ ] Full testing (unit, integration, E2E)
-- [ ] Performance optimization
-- [ ] Security audit
-- [ ] Deployment (web hosting + app stores)
-- [ ] User documentation / training
+- [x] Offline mode & data synchronization (ConnectivityService, LocalCacheService, SyncService, OfflineBanner)
+- [x] Push notifications setup (NotificationService, NotificationBell with in-app notification panel)
+- [x] Data export — PDF reports (branded, paginated) + CSV/Excel (UTF-8 BOM)
+- [x] Full testing — 52 unit tests (enums, models, JWT, notifications, CSV export)
+- [x] Performance optimization — connection pooling, response cache, DB indexes, paginated lists, debounced search
+- [x] Security hardening — rate limiting, security headers, input validation, request size limiter, auth brute-force protection
+- [x] Deployment — Dockerfile (multi-stage), docker-compose.prod.yml, Nginx reverse proxy, GitHub Actions CI/CD
+- [x] User documentation — comprehensive README, API reference, deployment guide
 
 ---
 

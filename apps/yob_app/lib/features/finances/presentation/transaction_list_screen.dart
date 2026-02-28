@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:yob_core/yob_core.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/services/csv_export_service.dart';
+import '../../../core/services/export_helper.dart';
+import '../../../core/services/pdf_export_service.dart';
 import '../data/finance_provider.dart';
 
 class TransactionListScreen extends ConsumerStatefulWidget {
@@ -23,6 +26,45 @@ class _TransactionListScreenState
   void dispose() {
     _searchCtrl.dispose();
     super.dispose();
+  }
+
+  void _exportTransactions(
+    BuildContext context,
+    TransactionListState state,
+  ) {
+    final txMaps = state.transactions
+        .map((t) => t.toJson())
+        .toList();
+
+    ExportHelper.showExportDialog(
+      context: context,
+      title: 'Transactions',
+      fileBaseName: 'transactions_yob',
+      onPdf: () {
+        final headers = [
+          'Date', 'Type', 'Catégorie', 'Description', 'Montant (FCFA)',
+        ];
+        final rows = txMaps.map((t) {
+          return [
+            t['date']?.toString() ?? '',
+            t['type'] == 'income' ? 'Revenu' : 'Dépense',
+            t['category']?.toString() ?? '',
+            t['description']?.toString() ?? '',
+            '${t['amount'] ?? 0}',
+          ];
+        }).toList();
+        return PdfExportService.generateTablePdf(
+          title: 'Liste des Transactions',
+          subtitle: '${state.total} transaction(s)',
+          headers: headers,
+          rows: rows,
+        );
+      },
+      onCsv: () async {
+        final csv = CsvExportService.exportTransactions(txMaps);
+        return CsvExportService.csvToBytes(csv);
+      },
+    );
   }
 
   @override
@@ -45,6 +87,12 @@ class _TransactionListScreenState
                       .headlineSmall
                       ?.copyWith(fontWeight: FontWeight.bold)),
               const Spacer(),
+              IconButton(
+                onPressed: () => _exportTransactions(context, state),
+                icon: const Icon(Icons.file_download_outlined),
+                tooltip: 'Exporter',
+              ),
+              const SizedBox(width: 4),
               OutlinedButton.icon(
                 onPressed: () => context.go('/finances/dashboard'),
                 icon: const Icon(Icons.dashboard_outlined, size: 18),
