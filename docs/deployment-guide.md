@@ -26,26 +26,6 @@
 
 ## Déploiement local
 
-### 🚀 Démarrage rapide (une seule commande)
-
-```bash
-./start.sh
-```
-
-Lance automatiquement : PostgreSQL → API → Flutter Web. Arrêt propre avec **Ctrl+C**.
-
-**Options disponibles :**
-```bash
-./start.sh                         # Tout lancer (cible: chrome)
-./start.sh --target=macos          # Flutter sur macOS desktop
-./start.sh --target=android        # Flutter sur appareil Android
-./start.sh --no-flutter            # API + DB uniquement
-```
-
----
-
-### Démarrage manuel (étape par étape)
-
 ### 1. Base de données
 
 ```bash
